@@ -15,7 +15,7 @@ namespace BookConsultant.Controller
             this.booksRepository = booksRepository;
         }
 
-        [HttpPost("/")]
+        [HttpPost]
         public IActionResult Save([FromBody] Book? book)
         {
             var validationError = ValidateBook(book);
@@ -26,10 +26,10 @@ namespace BookConsultant.Controller
             if (savedBook == null)
                 return BadRequest("Book has not saved");
             
-            return Ok();
+            return Ok(savedBook);
         }
         
-        [HttpPut("/")]
+        [HttpPut]
         public IActionResult Update([FromBody] Book? book)
         {
             var validationError = ValidateBook(book);
@@ -40,22 +40,23 @@ namespace BookConsultant.Controller
             if (updatedBook == null)
                 return BadRequest("Book has not updated");
 
-            return Ok(book);
+            return Ok(updatedBook);
         }
 
-        [HttpDelete("/")]
+        [HttpDelete]
         public IActionResult Delete([FromQuery(Name = "isbn")] string? isbn)
         {
             if (string.IsNullOrEmpty(isbn))
                 return BadRequest("Isbn is required");
 
-            if (booksRepository.TryRemove(isbn) == null)
+            var removedBook = booksRepository.TryRemove(isbn);
+            if (removedBook == null)
                 return BadRequest("Book has not removed");
             
-            return Ok();
+            return Ok(removedBook);
         }
 
-        [HttpGet("/")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(booksRepository.GetAll());

@@ -17,7 +17,13 @@ namespace BookConsultant
             services.AddSingleton<RatingsRepository>();
             services.AddSingleton<TagsRepository>();
             services.AddSingleton<BooksByTagsFilter>();
+            services.AddSingleton<BooksByAuthorsFilter>();
+            services.AddSingleton<BooksByGenresFilter>();
+            services.AddSingleton<BooksByMaxCountFilter>();
+            services.AddSingleton<BooksByRatingFilter>();
             services.AddControllers();
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -25,6 +31,13 @@ namespace BookConsultant
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseCors(builder => 
+            {
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
 
             app.UseHttpsRedirection();
 

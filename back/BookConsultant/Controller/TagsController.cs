@@ -16,7 +16,7 @@ namespace BookConsultant.Controller
             this.tagsRepository = tagsRepository;
         }
         
-        [HttpPost("/")]
+        [HttpPost]
         public IActionResult Save([FromBody] Tag? tag)
         {
             var validationError = ValidateTag(tag);
@@ -30,7 +30,7 @@ namespace BookConsultant.Controller
             return Ok(savedTag);
         }
 
-        [HttpPut("/")]
+        [HttpPut]
         public IActionResult Update([FromBody] Tag? tag)
         {
             var validationError = ValidateTag(tag);
@@ -44,7 +44,7 @@ namespace BookConsultant.Controller
             return Ok(updatedTag);
         }
 
-        [HttpDelete("/")]
+        [HttpDelete]
         public IActionResult Remove([FromQuery(Name = "name")] string? name)
         {
             if (string.IsNullOrEmpty(name))
@@ -57,7 +57,7 @@ namespace BookConsultant.Controller
             return Ok(removedTag);
         }
 
-        [HttpGet("/")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(tagsRepository.GetAll());

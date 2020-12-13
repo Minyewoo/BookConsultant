@@ -16,7 +16,7 @@ namespace BookConsultant.Controller
             this.genresRepository = genresRepository;
         }
 
-        [HttpPost("/")]
+        [HttpPost]
         public IActionResult Save([FromBody] Genre? genre)
         {
             var validationError = ValidateGenre(genre);
@@ -30,7 +30,7 @@ namespace BookConsultant.Controller
             return Ok(savedGenre);
         }
 
-        [HttpPut("/")]
+        [HttpPut]
         public IActionResult Update([FromBody] Genre? genre)
         {
             var validationError = ValidateGenre(genre);
@@ -44,7 +44,7 @@ namespace BookConsultant.Controller
             return Ok(updatedGenre);
         }
 
-        [HttpDelete("/")]
+        [HttpDelete]
         public IActionResult Remove([FromQuery(Name = "name")] string? name)
         {
             if (string.IsNullOrEmpty(name))
@@ -57,7 +57,7 @@ namespace BookConsultant.Controller
             return Ok(removedGenre);
         }
 
-        [HttpGet("/")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(genresRepository.GetAll());

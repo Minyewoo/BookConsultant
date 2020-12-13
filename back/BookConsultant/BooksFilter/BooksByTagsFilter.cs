@@ -19,9 +19,10 @@ namespace BookConsultant.BooksFilter
                 return books;
             
             var booksDictionary = books.ToDictionary(x => x.IsbnNumber);
-            var tagsDictionary = tagsRepository.GetAll().ToDictionary(x => x.Name);
+            var tagsDictionary = tagsRepository.GetAll().ToDictionary(x => x.Name.ToLower());
             
             return tags.Where(x => !string.IsNullOrEmpty(x))
+                       .Select(x => x.ToLower())
                        .Where(tagsDictionary.ContainsKey!)
                        .Select(x => tagsDictionary[x])
                        .Where(x => x.BooksIsbnNumbers != null)

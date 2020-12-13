@@ -22,11 +22,12 @@ namespace BookConsultant.Repository
         {
             genre.Name = genre.Name.ToLowerInvariant();
             using var context = new ConsultantContext();
-            if (!context.Genres.Any(x => x.Name == genre.Name))
+            var dbGenre = context.Genres.SingleOrDefault(x => x.Name == genre.Name);
+            if (dbGenre == null)
                 return null;
-            context.Genres.Add(genre);
+            dbGenre.BooksIsbnNumbers = genre.BooksIsbnNumbers;
             context.SaveChanges();
-            return genre;
+            return dbGenre;
         }
 
         public Genre? TryRemove(string name)

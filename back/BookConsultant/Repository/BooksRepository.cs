@@ -20,11 +20,14 @@ namespace BookConsultant.Repository
         public Book? TryUpdate(Book book)
         {
             using var context = new ConsultantContext();
-            if (!context.Books.Any(x => x.IsbnNumber == book.IsbnNumber))
+            var dbBook = context.Books.SingleOrDefault(x => x.IsbnNumber == book.IsbnNumber);
+            if (dbBook == null)
                 return null;
-            context.Books.Add(book);
+            dbBook.Name = book.Name;
+            dbBook.WrittenYear = book.WrittenYear;
+            dbBook.Authors = book.Authors;
             context.SaveChanges();
-            return book;
+            return dbBook;
         }
 
         public Book? TryRemove(string isbnNumber)

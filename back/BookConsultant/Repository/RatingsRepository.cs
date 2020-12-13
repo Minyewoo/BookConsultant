@@ -20,11 +20,12 @@ namespace BookConsultant.Repository
         public Rating? TryUpdate(Rating rating)
         {
             using var context = new ConsultantContext();
-            if (!context.Ratings.Any(x => x.BookIsbnNumber == rating.BookIsbnNumber))
+            var dbRating = context.Ratings.SingleOrDefault(x => x.BookIsbnNumber == rating.BookIsbnNumber);
+            if (dbRating == null)
                 return null;
-            context.Ratings.Add(rating);
+            dbRating.Value = rating.Value;
             context.SaveChanges();
-            return rating;
+            return dbRating;
         }
 
         public Rating? TryRemove(string bookId)

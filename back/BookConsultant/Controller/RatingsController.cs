@@ -15,7 +15,7 @@ namespace BookConsultant.Controller
             this.ratingsRepository = ratingsRepository;
         }
         
-        [HttpPost("/")]
+        [HttpPost]
         public IActionResult Save([FromBody] Rating? rating)
         {
             var validationError = ValidateRating(rating);
@@ -29,7 +29,7 @@ namespace BookConsultant.Controller
             return Ok(savedRating);
         }
 
-        [HttpPut("/")]
+        [HttpPut]
         public IActionResult Update([FromBody] Rating? rating)
         {
             var validationError = ValidateRating(rating);
@@ -43,7 +43,7 @@ namespace BookConsultant.Controller
             return Ok(updatedRating);
         }
 
-        [HttpDelete("/")]
+        [HttpDelete]
         public IActionResult Remove([FromQuery(Name = "book-isbn")] string? bookIsbnNumber)
         {
             if (string.IsNullOrEmpty(bookIsbnNumber))
@@ -56,7 +56,7 @@ namespace BookConsultant.Controller
             return Ok(removedRating);
         }
 
-        [HttpGet("/")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(ratingsRepository.GetAll());

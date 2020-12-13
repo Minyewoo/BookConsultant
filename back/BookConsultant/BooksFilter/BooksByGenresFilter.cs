@@ -19,9 +19,10 @@ namespace BookConsultant.BooksFilter
                 return books;
 
             var booksDictionary = books.ToDictionary(x => x.IsbnNumber);
-            var genresDictionary = genresRepository.GetAll().ToDictionary(x => x.Name);
+            var genresDictionary = genresRepository.GetAll().ToDictionary(x => x.Name.ToLower());
             
             return genres.Where(x => !string.IsNullOrEmpty(x))
+                         .Select(x => x.ToLower())
                          .Where(genresDictionary.ContainsKey!)
                          .Select(x => genresDictionary[x])
                          .Where(x => x.BooksIsbnNumbers != null)

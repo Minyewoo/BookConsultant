@@ -10,9 +10,14 @@ namespace BookConsultant.Repository
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Rating> Ratings { get; set; }
 
+        public ConsultantContext() 
+        {
+            Database.EnsureCreated();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=book_consultant;Username=postgres;Password=password");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=book_consultant;Username=postgres;Password=postgres");
         }
     }
 }

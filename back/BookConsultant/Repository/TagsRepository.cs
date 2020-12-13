@@ -22,11 +22,12 @@ namespace BookConsultant.Repository
         {
             tag.Name = tag.Name.ToLowerInvariant();
             using var context = new ConsultantContext();
-            if (!context.Tags.Any(x => x.Name == tag.Name))
+            var dbTag = context.Tags.SingleOrDefault(x => x.Name == tag.Name);
+            if (dbTag == null)
                 return null;
-            context.Tags.Add(tag);
+            dbTag.BooksIsbnNumbers = tag.BooksIsbnNumbers;
             context.SaveChanges();
-            return tag;
+            return dbTag;
         }
 
         public Tag? TryRemove(string name)

@@ -25,7 +25,7 @@ namespace BookConsultant.Controller
             this.maxCountFilter = maxCountFilter;
         }
 
-        [HttpGet("search")]
+        [HttpGet]
         public IActionResult Search([FromQuery(Name = "tags")] string?[]? tags, 
                                     [FromQuery(Name = "genres")] string?[]? genres,
                                     [FromQuery(Name = "authors")] string?[]? authors,
