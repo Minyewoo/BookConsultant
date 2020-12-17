@@ -18,7 +18,7 @@ namespace BookConsultant.BooksFilter
             if (tags == null || tags.All(string.IsNullOrEmpty))
                 return books;
             
-            var booksDictionary = books.ToDictionary(x => x.Book.IsbnNumber);
+            var booksDictionary = books.ToDictionary(x => x.IsbnNumber);
             var tagsDictionary = tagsRepository.GetAll().ToDictionary(x => x.Name.ToLower());
             
             return tags.Where(x => !string.IsNullOrEmpty(x))

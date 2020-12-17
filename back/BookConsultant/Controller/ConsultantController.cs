@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Xml.Serialization;
 using BookConsultant.BooksFilter;
 using BookConsultant.Model;
 using BookConsultant.Repository;
@@ -36,7 +38,13 @@ namespace BookConsultant.Controller
             [FromQuery(Name = "max-count")] int? maxCount)
         {
             var books = booksRepository.GetAll()
-                .Select(x => new FilteredBook {Book = x, Filters = new List<string>()}).ToArray();
+                .Select(x =>
+                {
+                    var filteredBook = JsonSerializer.Deserialize<FilteredBook>(JsonSerializer.Serialize(x));
+                    filteredBook.Filters = new List<string>();
+                    return filteredBook;
+                })
+                .ToArray();
 
             var filteredBooksByFilters = new List<FilteredBook[]>
             {
@@ -44,22 +52,20 @@ namespace BookConsultant.Controller
                 genresFilter.Filter(books, genres),
                 tagsFilter.Filter(books, tags),
                 ratingFilter.Filter(books, minRating)
-            };
+            }.SelectMany(x => x).Where(x => x.Filters.Count > 0).ToArray();
 
+            filteredBooksByFilters = filteredBooksByFilters.GroupBy(x => x.IsbnNumber)
+                .Select(x =>
+                {
+                    var filters = x.SelectMany(z => z.Filters).Distinct().ToList();
+                    var filteredBook = x.First();
+                    filteredBook.Filters = filters;
+                    return filteredBook;
+                }).ToArray();
 
-            FilteredBook[] filteredBooks = new FilteredBook[0];
-            filteredBooks = filteredBooksByFilters.Aggregate(filteredBooks, Merge);
+            filteredBooksByFilters = maxCountFilter.Filter(filteredBooksByFilters, maxCount);
 
-            filteredBooks = maxCountFilter.Filter(filteredBooks, maxCount);
-
-            return Ok(filteredBooks);
-        }
-
-        private FilteredBook[] Merge(FilteredBook[] filteredBooks, FilteredBook[] anotherFilteredBooks)
-        {
-            return filteredBooks.Union(anotherFilteredBooks).GroupBy(x => x.Book.IsbnNumber)
-                .Select(x => x.Count() > 1 ? x.First().AddFilters(x.Last().Filters) : x.First())
-                .ToArray();
+            return Ok(filteredBooksByFilters);
         }
 
         private readonly BooksRepository booksRepository;

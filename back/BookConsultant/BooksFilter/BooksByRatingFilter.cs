@@ -18,7 +18,7 @@ namespace BookConsultant.BooksFilter
             if (minRating == null)
                 return books;
 
-            var booksDictionary = books.ToDictionary(x => x.Book.IsbnNumber);
+            var booksDictionary = books.ToDictionary(x => x.IsbnNumber);
             
             return ratingsRepository.GetAll()
                                     .Where(x => x.Value >= minRating)

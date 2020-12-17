@@ -3,6 +3,7 @@ import React from "react";
 export default class Consultant extends React.Component {
   state = {
     books: [],
+    noFilters: false
   };
   searchCriteria = {
     tags: [],
@@ -11,6 +12,8 @@ export default class Consultant extends React.Component {
     minRating: null,
     maxCount: null,
   };
+
+
 
   render() {
     return (
@@ -41,7 +44,7 @@ export default class Consultant extends React.Component {
           </p>
         </div>
         <div>
-          {this.state.books.map((filteredBook, index) => <p>{index + 1}: ({filteredBook.book.isbnNumber}) {filteredBook.book.name} : мы выбрали книги потому что, потому что {this.filtersToHtml(filteredBook.filters)}</p>)}
+          {this.state.books.map((filteredBook, index) => <p>{index + 1}: ({filteredBook.isbnNumber}) {filteredBook.name} {this.filtersToHtml(filteredBook.filters)}</p>)}
         </div>
       </div>
     );
@@ -62,7 +65,7 @@ export default class Consultant extends React.Component {
         return 'Рейтинг';
     }
   }
-  filtersToHtml = filters => filters.map((filter, _) => <span className="filter">{this.filterToText(filter)}</span>);
+  filtersToHtml = filters => filters && filters.map((filter, _) => <span className="filter">{this.filterToText(filter)}</span>);
 
   handleNumberChange = e => {
     this.searchCriteria[e.target.id] = parseInt(e.target.value);
@@ -85,10 +88,17 @@ export default class Consultant extends React.Component {
     let minRating = this.searchCriteria.minRating === null ? '' : `min-rating=${this.searchCriteria.minRating}&`;
     let maxCount = this.searchCriteria.maxCount === null ? '' : `max-count=${this.searchCriteria.maxCount}&`;
 
-    let result = await fetch(`http://localhost:5000/consultant?${tags}${genres}${authors}${minRating}${maxCount}`);
+    let filter = `${tags}${genres}${authors}${minRating}${maxCount}`;
+
+    let result;
+    if (filter === '')
+      result =  await fetch(`http://localhost:5000/books`);
+    else
+      result = await fetch(`http://localhost:5000/consultant?${filter}`);
 
     if (result.ok) {
       let books = await result.json();
+      
       this.setState({
         books: books
       });
