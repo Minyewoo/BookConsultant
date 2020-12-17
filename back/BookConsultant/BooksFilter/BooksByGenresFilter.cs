@@ -19,7 +19,7 @@ namespace BookConsultant.BooksFilter
             if (genres == null || genres.All(string.IsNullOrEmpty))
                 return books;
 
-            var booksDictionary = books.ToDictionary(x => x.Book.IsbnNumber);
+            var booksDictionary = books.ToDictionary(x => x.IsbnNumber);
             var genresDictionary = genresRepository.GetAll().ToDictionary(x => x.Name.ToLower());
             
             return genres.Where(x => !string.IsNullOrEmpty(x))

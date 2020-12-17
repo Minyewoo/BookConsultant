@@ -16,12 +16,12 @@ namespace BookConsultant.BooksFilter
 
             authors = authors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
-            return books.Where(x => x.Book.Authors != null)
-                .SelectMany(x => x.Book.Authors.Select(y => (Author: y, Book: x)))
+            return books.Where(x => x.Authors != null)
+                .SelectMany(x => x.Authors.Select(y => (Author: y, Book: x)))
                 .SelectMany(x => authors.Select(y => (Author: y, BookAuthor: x)))
                 .Where(x => CompareAuthors(x.BookAuthor.Author, x.Author!))
                 .Select(x => x.BookAuthor.Book)
-                .GroupBy(x => x.Book.IsbnNumber)
+                .GroupBy(x => x.IsbnNumber)
                 .Select(x => x.First().AddFilter("authors"))
                 .ToArray();
         }
