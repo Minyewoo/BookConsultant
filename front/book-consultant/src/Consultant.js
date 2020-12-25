@@ -88,13 +88,7 @@ export default class Consultant extends React.Component {
     let minRating = this.searchCriteria.minRating === null ? '' : `min-rating=${this.searchCriteria.minRating}&`;
     let maxCount = this.searchCriteria.maxCount === null ? '' : `max-count=${this.searchCriteria.maxCount}&`;
 
-    let filter = `${tags}${genres}${authors}${minRating}${maxCount}`;
-
-    let result;
-    if (filter === '')
-      result =  await fetch(`http://localhost:5000/books`);
-    else
-      result = await fetch(`http://localhost:5000/consultant?${filter}`);
+    let result = await fetch(`http://localhost:5000/consultant?${tags}${genres}${authors}${minRating}${maxCount}`);
 
     if (result.ok) {
       let books = await result.json();

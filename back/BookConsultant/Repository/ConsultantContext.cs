@@ -17,7 +17,7 @@ namespace BookConsultant.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=book_consultant;Username=postgres;Password=password");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=book_consultant;Username=postgres;Password=postgres");
         }
     }
 }
